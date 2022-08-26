@@ -5,6 +5,7 @@ import (
 	"github.com/kalilmvp/codebank/domain"
 	"github.com/kalilmvp/codebank/dto"
 	"github.com/kalilmvp/codebank/infrastructure/kafka"
+	"os"
 	"time"
 )
 
@@ -47,7 +48,7 @@ func (u UseCaseTransaction) ProcessTransaction(transactionDTO dto.Transaction) (
 		return domain.Transaction{}, err
 	}
 
-	err = u.KafkaProducer.Publish(string(transactionJson), "payments")
+	err = u.KafkaProducer.Publish(string(transactionJson), os.Getenv("KafkaTransactionsTopic"))
 
 	if err != nil {
 		return domain.Transaction{}, err
@@ -70,7 +71,7 @@ func (u UseCaseTransaction) hydrateCreditCard(transactionDTO dto.Transaction) *d
 func (u UseCaseTransaction) newTransaction(transaction dto.Transaction, cc domain.CreditCard) *domain.Transaction {
 	t := domain.NewTransaction()
 	t.CreditCardId = cc.ID
-	t.Amount = transaction.Amounnt
+	t.Amount = transaction.Amount
 	t.Store = transaction.Store
 	t.Description = transaction.Description
 	t.CreatedAt = time.Now()

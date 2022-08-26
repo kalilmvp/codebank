@@ -1,3 +1,4 @@
 .idea/
 .pgdata/
 /apache_kafka/es01/
+.env

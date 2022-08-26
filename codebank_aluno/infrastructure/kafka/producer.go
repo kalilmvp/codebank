@@ -1,6 +1,8 @@
 package kafka
 
-import ckafka "github.com/confluentinc/confluent-kafka-go/kafka"
+import (
+	ckafka "github.com/confluentinc/confluent-kafka-go/kafka"
+)
 
 type KafkaProducer struct {
 	Producer *ckafka.Producer
@@ -12,7 +14,7 @@ func NewKafkaProducer() KafkaProducer {
 
 func (k *KafkaProducer) SetupProducer(bootstrapServers string) {
 	configMap := &ckafka.ConfigMap{
-		"boostrap.servers": bootstrapServers,
+		"bootstrap.servers": bootstrapServers,
 	}
 
 	k.Producer, _ = ckafka.NewProducer(configMap)
