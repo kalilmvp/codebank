@@ -50,7 +50,7 @@ export default ProductListPage;
 
 export const getServerSideProps: GetServerSideProps<ProductsListPageProps> = async (context) => {
     const { data: products } = await http.get('products')
-    // console.log(products);
+    console.log(products);
     return {
         props: {
             products

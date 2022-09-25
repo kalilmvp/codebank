@@ -19,7 +19,7 @@ func NewGRPCServer() GRPCServer {
 }
 
 func (s GRPCServer) Serve() {
-	list, err := net.Listen("tcp", "0.0.0.0:50051")
+	list, err := net.Listen("tcp", "0.0.0.0:50052")
 
 	if err != nil {
 		log.Fatalf("could not listen to port")

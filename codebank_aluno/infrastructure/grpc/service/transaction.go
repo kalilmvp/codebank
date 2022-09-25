@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/kalilmvp/codebank/dto"
 	"github.com/kalilmvp/codebank/infrastructure/grpc/pb"
@@ -20,6 +21,7 @@ func NewTransactionService() *TransactionService {
 }
 
 func (t *TransactionService) Payment(ctx context.Context, in *pb.PaymentRequest) (*empty.Empty, error) {
+	fmt.Println("Chegou no payment")
 	transactionDto := dto.Transaction{
 		Name:            in.GetCreditCard().GetName(),
 		Number:          in.GetCreditCard().GetNumber(),

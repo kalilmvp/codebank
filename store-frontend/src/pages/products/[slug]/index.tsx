@@ -59,7 +59,7 @@ export const getStaticProps: GetStaticProps<ProductDetailsPageProps, { slug: str
             revalidate: 1 * 60 * 2
         }
     } catch (e) {
-        if (axios.isAxiosError(e) && e.response!.status === 404) {
+        if (axios.isAxiosError(e) && e.response?.status === 404) {
             return {
                 notFound: true
             }

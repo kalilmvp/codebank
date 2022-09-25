@@ -1,26 +1,55 @@
-import type { GetServerSideProps, GetStaticPaths, GetStaticProps, NextPage } from 'next'
+import type { GetServerSideProps, NextPage } from 'next'
 import Head from 'next/head'
 import {
-    Avatar, Box,
+    Avatar,
+    Box,
     Button,
-    Card,
-    CardActions,
-    CardContent,
-    CardHeader,
-    CardMedia, Grid,
+    Grid,
     ListItem,
-    ListItemAvatar, ListItemText, TextField,
+    ListItemAvatar,
+    ListItemText,
+    TextField,
     Typography
 } from "@material-ui/core";
-import { Product, products } from "../../../models";
+import { CreditCard, Product } from "../../../models";
 import http from "../../../http";
 import axios from "axios";
+import { useForm } from "react-hook-form";
+import { useSnackbar } from "notistack";
+import { useRouter } from "next/router";
 
 interface OrderDetailsPageProps {
     product: Product
 }
 
 const OrderPage: NextPage<OrderDetailsPageProps> = ({ product }) => {
+    const { register, handleSubmit, setValue } = useForm<CreditCard>();
+    const { enqueueSnackbar } = useSnackbar();
+    const router = useRouter();
+
+    const handleFormSubmit = async (data: CreditCard) => {
+        console.log(data);
+        try {
+            const { data: order } = await http.post('orders', {
+                credit_card: data,
+                items: [
+                    {
+                        product_id: product.id,
+                        quantity: 1
+                    }
+                ]
+            });
+            // await router.push(`/orders/${order.id}`)
+            console.log(order);
+        } catch (e) {
+            console.error(axios.isAxiosError(e) ? e.response?.data : e);
+            enqueueSnackbar('Error making your order.', {
+                variant: 'error'
+            })
+        }
+
+    }
+
     return (
         <div>
             <Head>
@@ -43,29 +72,31 @@ const OrderPage: NextPage<OrderDetailsPageProps> = ({ product }) => {
             <Typography component="h2" variant="h6" gutterBottom>
                 Pay with credit card
             </Typography>
-            <form>
+            <form onSubmit={handleSubmit(handleFormSubmit)}>
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={6}>
-                        <TextField required type="number" label="Name" fullWidth/>
+                        <TextField {...register('name')}  required label="Name" fullWidth/>
                     </Grid>
                     <Grid item xs={12} md={6}>
-                        <TextField required label="Card's Number" fullWidth inputProps={{ maxLength: 16 }}/>
+                        <TextField {...register('number')} required label="Card's Number" fullWidth inputProps={{ maxLength: 16 }}/>
                     </Grid>
                     <Grid item xs={12} md={6}>
-                        <TextField required type="number" label="CVV" fullWidth/>
+                        <TextField {...register('cvv')} required type="number" label="CVV" fullWidth/>
                     </Grid>
                     <Grid item xs={12} md={6}>
                         <Grid container spacing={3}>
                             <Grid item xs={6}>
-                                <TextField required type="number" label="Expiration's Month" fullWidth/>
+                                <TextField {...register('expiration_month', { valueAsNumber: true})}
+                                           required type="number" label="Expiration's Month" fullWidth/>
                             </Grid>
                             <Grid item xs={6}>
-                                <TextField required type="number" label="Expiration's Year" fullWidth/>
+                                <TextField {...register('expiration_year', { valueAsNumber: true})}
+                                           required type="number" label="Expiration's Year" fullWidth/>
                             </Grid>
                         </Grid>
                     </Grid>
                 </Grid>
-                <Box marginTop={3}>
+                <Box marginTop={10}>
                     <Button type="submit" variant="contained" color="primary" fullWidth>
                         Pay
                     </Button>
@@ -88,7 +119,7 @@ export const getServerSideProps: GetServerSideProps<OrderDetailsPageProps, { slu
             }
         }
     } catch (e) {
-        if (axios.isAxiosError(e) && e.response!.status === 404) {
+        if (axios.isAxiosError(e) && e.response?.status === 404) {
             return {
                 notFound: true
             }
