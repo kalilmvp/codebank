@@ -1,0 +1,37 @@
+import { Module } from '@nestjs/common';
+import { OrdersService } from './orders.service';
+import { OrdersController } from './orders.controller';
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { Order } from "./entities/order.entity";
+import { OrderItems } from "./entities/order-item.entity";
+import { Product } from "../products/entities/product.entity";
+import { ClientsModule, Transport } from "@nestjs/microservices";
+import { join } from 'path';
+import { PaymentService } from './payment/payment.service';
+
+@Module({
+    imports: [
+        TypeOrmModule.forFeature([
+            Order,
+            OrderItems,
+            Product
+        ]),
+        ClientsModule.registerAsync([
+            {
+                name: 'PAYMENT_PACKAGE',
+                useFactory: () => ({
+                    transport: Transport.GRPC,
+                    options: {
+                        url: 'host.docker.internal:50052',
+                        package: 'payment',
+                        protoPath: join(__dirname, 'proto/payment.proto')
+                    }
+                })
+            }
+        ])
+    ],
+    controllers: [OrdersController],
+    providers: [OrdersService, PaymentService]
+})
+export class OrdersModule {
+}
