@@ -1,7 +1,5 @@
 syntax = "proto3";
-
 package payment;
-
 option go_package = "grpc/pb";
 
 import "google/protobuf/empty.proto";
@@ -18,13 +16,8 @@ message PaymentRequest {
     int32 expirationYear = 4;
     int32 cvv = 5;
   }
-
   CreditCard creditCard = 1;
-  double amout = 2;
+  double amount = 2;
   string store = 3;
   string description = 4;
 }
-
-
-
-

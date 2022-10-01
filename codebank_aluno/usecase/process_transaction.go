@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/kalilmvp/codebank/domain"
 	"github.com/kalilmvp/codebank/dto"
 	"github.com/kalilmvp/codebank/infrastructure/kafka"
@@ -19,6 +20,7 @@ func NewUseCaseTransaction(transactionRepository domain.TransactionRepository) U
 }
 
 func (u UseCaseTransaction) ProcessTransaction(transactionDTO dto.Transaction) (domain.Transaction, error) {
+	fmt.Println("Processando transacao")
 	creditCard := u.hydrateCreditCard(transactionDTO)
 
 	ccBalanceAndLimit, err := u.TransactionRepository.GetCreditCard(*creditCard)

@@ -1,6 +1,6 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { ClientGrpc, RpcException } from "@nestjs/microservices";
-import { Observable } from "rxjs";
+import { ClientGrpc, RpcException } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
 
 interface PaymentData {
     creditCard: {
@@ -27,21 +27,18 @@ export class PaymentService implements OnModuleInit {
     }
 
     onModuleInit(): any {
-        console.log(3);
-        this.paymentGRPCService = this.clientGRPC.getService<PaymentGRPCService>('PaymentService');
+        this.paymentGRPCService =
+            this.clientGRPC.getService<PaymentGRPCService>('PaymentService');
     }
 
     async payment(data: PaymentData) {
         try {
-            console.log(1);
             return await this.paymentGRPCService.payment(data).toPromise();
         } catch (e) {
-            console.error(e);
-            console.log(2);
             throw new RpcException({
                 code: e.code,
-                message: e.message
-            })
+                message: e.message,
+            });
         }
     }
 }

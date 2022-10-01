@@ -31,7 +31,6 @@ services:
 
 networks:
   default:
-    external:
-      name: codebank_aluno_default
+    name: codebank_aluno_default
 
 

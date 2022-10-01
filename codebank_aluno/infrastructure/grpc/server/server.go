@@ -1,13 +1,14 @@
 package server
 
 import (
+	"log"
+	"net"
+
 	"github.com/kalilmvp/codebank/infrastructure/grpc/pb"
 	"github.com/kalilmvp/codebank/infrastructure/grpc/service"
 	"github.com/kalilmvp/codebank/usecase"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
-	"log"
-	"net"
 )
 
 type GRPCServer struct {

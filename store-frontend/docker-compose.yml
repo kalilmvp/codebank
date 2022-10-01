@@ -16,5 +16,4 @@ services:
 
 networks:
   default:
-    external:
-      name: store-api_default
+    name: store-api_default

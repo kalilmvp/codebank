@@ -8,6 +8,7 @@ package pb
 
 import (
 	context "context"
+	"fmt"
 	empty "github.com/golang/protobuf/ptypes/empty"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
@@ -72,6 +73,7 @@ func RegisterPaymentServiceServer(s grpc.ServiceRegistrar, srv PaymentServiceSer
 }
 
 func _PaymentService_Payment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	fmt.Println("Register PaymentService")
 	in := new(PaymentRequest)
 	if err := dec(in); err != nil {
 		return nil, err
