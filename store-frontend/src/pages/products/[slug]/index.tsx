@@ -51,7 +51,6 @@ export const getStaticProps: GetStaticProps<ProductDetailsPageProps, { slug: str
     const { slug } = context.params!;
     try {
         const { data: product } = await http.get(`products/${slug}`)
-        // console.log(product);
         return {
             props: {
                 product

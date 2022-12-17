@@ -11,8 +11,10 @@ services:
       - .:/go/src/
     extra_hosts:
       - "host.docker.internal:172.17.0.1"
+#    networks:
+#      - default
     networks:
-      - default
+      - kafka_go_store
 
   db:
     image: postgres:9.4
@@ -27,6 +29,8 @@ services:
       - "5432:5432"
     extra_hosts:
       - "host.docker.internal:172.17.0.1"
+    networks:
+      - kafka_go_store
 
 #  pgadmin:
 #    image: dpage/pgadmin4
@@ -42,5 +46,5 @@ services:
 #      - "host.docker.internal:172.17.0.1"
 
 networks:
-  default:
-    name: apache_kafka_default
+  kafka_go_store:
+    external: true

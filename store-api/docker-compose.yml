@@ -3,7 +3,7 @@ version: '3'
 services:
   appapi:
     build: .
-    entrypoint: dockerize -wait tcp://db:5432 -timeout 40s ./.docker/entrypoint.sh
+    entrypoint: dockerize -wait tcp://db:5433 -timeout 40s ./.docker/entrypoint.sh
     container_name: imersao-fullcycle-store-api-app
     ports:
       - "3000:3000"
@@ -14,7 +14,7 @@ services:
     extra_hosts:
       - 'host.docker.internal:172.17.0.1'
     networks:
-      - default
+      - kafka_go_store
 
   db:
     build: .docker/postgres
@@ -23,14 +23,17 @@ services:
     tty: true
     volumes:
       - .docker/postgres/pgdata:/var/lib/postgresql/data
-#    ports:
-#      - "5432:5432"
+    ports:
+      - "5433:5433"
     environment:
       - POSTGRES_PASSWORD=root
       - POSTGRES_DB=store
+      - PGPORT=5433
+    networks:
+      - kafka_go_store
 
 networks:
-  default:
-    name: codebank_aluno_default
+  kafka_go_store:
+    external: true
 
 

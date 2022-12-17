@@ -12,6 +12,7 @@ import { PaymentService } from './payment/payment.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Order, OrderItems, Product]),
+
     ClientsModule.registerAsync([
       {
         name: 'PAYMENT_PACKAGE',

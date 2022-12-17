@@ -12,8 +12,9 @@ services:
     extra_hosts:
       - 'host.docker.internal:172.17.0.1'
     networks:
-      - default
+      - kafka_go_store
 
 networks:
-  default:
-    name: store-api_default
+  kafka_go_store:
+    external: true
+

@@ -28,7 +28,6 @@ const OrderPage: NextPage<OrderDetailsPageProps> = ({ product }) => {
     const router = useRouter();
 
     const handleFormSubmit = async (data: CreditCard) => {
-        console.log(data);
         try {
             const { data: order } = await http.post('orders', {
                 credit_card: data,
@@ -39,15 +38,13 @@ const OrderPage: NextPage<OrderDetailsPageProps> = ({ product }) => {
                     }
                 ]
             });
-            // await router.push(`/orders/${order.id}`)
-            console.log(order);
+            await router.push(`/orders/${order.id}`)
         } catch (e) {
             console.error(axios.isAxiosError(e) ? e.response?.data : e);
             enqueueSnackbar('Error making your order.', {
                 variant: 'error'
             })
         }
-
     }
 
     return (
@@ -112,7 +109,6 @@ export const getServerSideProps: GetServerSideProps<OrderDetailsPageProps, { slu
     const { slug } = context.params!;
     try {
         const { data: product } = await http.get(`products/${slug}`)
-        // console.log(product);
         return {
             props: {
                 product
