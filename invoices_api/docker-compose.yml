@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  appapi:
+    build: .
+    entrypoint: dockerize -wait tcp://db:5432 -timeout 40s ./.docker/entrypoint.sh
+    container_name: imersao-fullcycle-invoices-api-app
+    ports:
+      - "3002:3000"
+    volumes:
+      - .:/home/node/app
+    depends_on:
+      - db
+    extra_hosts:
+      - 'host.docker.internal:172.17.0.1'
+    networks:
+      - kafka_go_store
+
+  db:
+    build: .docker/postgres
+    container_name: imersao-fullcycle-invoices-api-db
+    restart: always
+    tty: true
+    volumes:
+      - .docker/postgres/pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=invoices
+    networks:
+      - kafka_go_store
+
+networks:
+  kafka_go_store:
+    external: true
+
+
