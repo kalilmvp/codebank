@@ -11,26 +11,25 @@ services:
       - .:/go/src/
     extra_hosts:
       - "host.docker.internal:172.17.0.1"
-#    networks:
-#      - default
     networks:
       - kafka_go_store
+      - postgres_codebank
 
-  db:
-    image: postgres:9.4
-    restart: always
-    tty: true
-    volumes:
-      - .pgdata:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=codebank
-    ports:
-      - "5432:5432"
-    extra_hosts:
-      - "host.docker.internal:172.17.0.1"
-    networks:
-      - kafka_go_store
+#  db:
+#    image: postgres:9.4
+#    restart: always
+#    tty: true
+#    volumes:
+#      - .pgdata:/var/lib/postgresql/data
+#    environment:
+#      - POSTGRES_PASSWORD=root
+#      - POSTGRES_DB=codebank
+#    ports:
+#      - "5432:5432"
+#    extra_hosts:
+#      - "host.docker.internal:172.17.0.1"
+#    networks:
+#      - kafka_go_store
 
 #  pgadmin:
 #    image: dpage/pgadmin4
@@ -46,5 +45,7 @@ services:
 #      - "host.docker.internal:172.17.0.1"
 
 networks:
+  postgres_codebank:
+    external: true
   kafka_go_store:
     external: true

@@ -28,6 +28,8 @@ func main() {
 	processTransactionUseCase := setupTransactionUseCase(db, producer)
 	serveGRPC(processTransactionUseCase)
 
+	//fmt.Println("1")
+	//
 	//cc := domain.NewCreditCard()
 	//cc.Number = "1234"
 	//cc.Name = "Kalil"
@@ -39,6 +41,8 @@ func main() {
 	//
 	//repo := repository.NewTransactionRepositoryDb(db)
 	//repo.CreateCreditCard(*cc)
+	//
+	//fmt.Println("2")
 }
 
 func setupTransactionUseCase(db *sql.DB, producer kafka.KafkaProducer) usecase.UseCaseTransaction {

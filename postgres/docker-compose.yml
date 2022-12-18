@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  db:
+    build: .
+    container_name: imersao-fullcycle-db
+    restart: always
+    tty: true
+    volumes:
+      - .docker/postgres/pgdata:/var/lib/postgresql/data
+      - .docker/postgres:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=root
+    networks:
+      - kafka_go_store
+      - postgres_codebank
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    tty: true
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@user.com
+      - PGADMIN_DEFAULT_PASSWORD=123456
+    ports:
+      - "9002:80"
+
+networks:
+  kafka_go_store:
+    external: true
+  postgres_codebank:
+    external: true
+
+

@@ -19,7 +19,7 @@ import { OrdersModule } from './orders/orders.module';
       entities: [process.env.TYPEORM_ENTITIES],
     }),
     ProductsModule,
-    OrdersModule,
+    OrdersModule
   ],
   controllers: [AppController],
   providers: [AppService],

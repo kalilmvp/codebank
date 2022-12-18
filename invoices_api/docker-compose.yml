@@ -9,27 +9,38 @@ services:
       - "3002:3000"
     volumes:
       - .:/home/node/app
-    depends_on:
-      - db
     extra_hosts:
       - 'host.docker.internal:172.17.0.1'
     networks:
       - kafka_go_store
+      - postgres_codebank
 
-  db:
-    build: .docker/postgres
-    container_name: imersao-fullcycle-invoices-api-db
-    restart: always
-    tty: true
-    volumes:
-      - .docker/postgres/pgdata:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=invoices
-    networks:
-      - kafka_go_store
+#  db:
+#    build: .docker/postgres
+#    container_name: imersao-fullcycle-invoices-api-db
+#    restart: always
+#    tty: true
+#    volumes:
+#      - .docker/postgres/pgdata:/var/lib/postgresql/data
+#    environment:
+#      - POSTGRES_PASSWORD=root
+#      - POSTGRES_DB=invoices
+#    networks:
+#      - kafka_go_store
+
+#  pgadmin:
+#    image: dpage/pgadmin4
+#    container_name: pgadmin
+#    tty: true
+#    environment:
+#      - PGADMIN_DEFAULT_EMAIL=admin@user.com
+#      - PGADMIN_DEFAULT_PASSWORD=123456
+#    ports:
+#      - "9002:80"
 
 networks:
+  postgres_codebank:
+    external: true
   kafka_go_store:
     external: true
 
