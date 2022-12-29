@@ -9,7 +9,7 @@ const Navbar: React.FunctionComponent = () => {
                 <Link href={"/"} as={"/"} passHref>
                     <Button color="inherit" startIcon={<StoreIcon />}>
                         <Typography variant="h6">
-                            Code Store
+                            Code Invoice
                         </Typography>
                     </Button>
                 </Link>

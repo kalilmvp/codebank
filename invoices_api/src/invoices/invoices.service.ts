@@ -1,26 +1,45 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateInvoiceDto } from './dto/create-invoice.dto';
-import { UpdateInvoiceDto } from './dto/update-invoice.dto';
+import { CreditCard } from './entities/credit_card.entity';
+import { Invoice } from './entities/invoice.entity';
 
 @Injectable()
 export class InvoicesService {
-  create(createInvoiceDto: CreateInvoiceDto) {
-    return 'This action adds a new invoice';
+  constructor(
+    @InjectRepository(Invoice) private invoiceRepo: Repository<Invoice>,
+    @InjectRepository(CreditCard)
+    private creditCardRepo: Repository<CreditCard>,
+  ) {}
+  async create(createInvoiceDto: CreateInvoiceDto) {
+    const { credit_card_number, ...data } = createInvoiceDto;
+    const creditCard = await this.creditCardRepo.findOneOrFail({
+      where: {
+        number: credit_card_number,
+      },
+    });
+
+    const invoiceCreated = this.invoiceRepo.create({
+      ...data,
+      credit_card_id: creditCard.id,
+    });
+
+    return this.invoiceRepo.save(invoiceCreated);
   }
 
-  findAll() {
-    return `This action returns all invoices`;
-  }
+  findAll(creditCardNumber?: string) {
+    let query = this.invoiceRepo
+      .createQueryBuilder('invoice')
+      .select(['invoice.*']);
 
-  findOne(id: number) {
-    return `This action returns a #${id} invoice`;
-  }
-
-  update(id: number, updateInvoiceDto: UpdateInvoiceDto) {
-    return `This action updates a #${id} invoice`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} invoice`;
+    if (creditCardNumber) {
+      query = query
+        .leftJoin('invoice.credit_card', 'credit_card')
+        .andWhere('credit_card.number = :creditCardNumber', {
+          creditCardNumber,
+        });
+    }
+    return query.execute();
   }
 }

@@ -1,4 +1,13 @@
-import { BeforeInsert, Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude } from 'class-transformer';
+import {
+  BeforeInsert,
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { CreditCard } from './credit_card.entity';
 
@@ -10,8 +19,10 @@ export class Invoice {
   amount: number;
   @Column()
   payment_date: Date;
+  @Exclude()
   @Column()
   credit_card_id: string;
+  @Exclude()
   @ManyToOne(() => CreditCard)
   @JoinColumn({
     name: 'credit_card_id',

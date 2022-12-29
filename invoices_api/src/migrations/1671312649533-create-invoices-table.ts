@@ -1,7 +1,11 @@
-import { MigrationInterface, QueryRunner, Table, TableForeignKey } from 'typeorm';
+import {
+  MigrationInterface,
+  QueryRunner,
+  Table,
+  TableForeignKey,
+} from 'typeorm';
 
 export class CreateInvoicesTable1671312649533 implements MigrationInterface {
-
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
@@ -45,16 +49,22 @@ export class CreateInvoicesTable1671312649533 implements MigrationInterface {
       }),
     );
 
-    await queryRunner.createForeignKey('invoices', new TableForeignKey({
-      name: 'invoices_credit_card_id_foreign_key',
-      columnNames: ['credit_card_id'],
-      referencedColumnNames: ['id'],
-      referencedTableName: 'credit_cards',
-    }));
+    await queryRunner.createForeignKey(
+      'invoices',
+      new TableForeignKey({
+        name: 'invoices_credit_card_id_foreign_key',
+        columnNames: ['credit_card_id'],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'credit_cards',
+      }),
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropForeignKey('invoices', 'invoices_credit_card_id_foreign_key');
+    await queryRunner.dropForeignKey(
+      'invoices',
+      'invoices_credit_card_id_foreign_key',
+    );
     await queryRunner.dropTable('invoices');
   }
 }

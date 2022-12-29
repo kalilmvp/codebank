@@ -1,34 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Param, ValidationPipe } from '@nestjs/common';
 import { InvoicesService } from './invoices.service';
-import { CreateInvoiceDto } from './dto/create-invoice.dto';
-import { UpdateInvoiceDto } from './dto/update-invoice.dto';
+import { MessagePattern, Payload } from '@nestjs/microservices';
+import { KafkaCreateInvoiceDto } from './dto/create-invoice.dto';
 
-@Controller('invoices')
+@Controller('credit-cards/:creditCardNumber/invoices')
 export class InvoicesController {
   constructor(private readonly invoicesService: InvoicesService) {}
 
-  @Post()
-  create(@Body() createInvoiceDto: CreateInvoiceDto) {
-    return this.invoicesService.create(createInvoiceDto);
+  @MessagePattern('payments')
+  create(
+    @Payload(new ValidationPipe())
+    kafkaCreateInvoiceDto: KafkaCreateInvoiceDto,
+  ) {
+    console.log(kafkaCreateInvoiceDto);
+
+    return this.invoicesService.create(kafkaCreateInvoiceDto.value);
   }
 
   @Get()
-  findAll() {
-    return this.invoicesService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.invoicesService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateInvoiceDto: UpdateInvoiceDto) {
-    return this.invoicesService.update(+id, updateInvoiceDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.invoicesService.remove(+id);
+  findAll(@Param('creditCardNumber') creditCardNumber: string) {
+    return this.invoicesService.findAll(creditCardNumber);
   }
 }
